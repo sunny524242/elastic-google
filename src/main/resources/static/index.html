@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>搜索</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/index.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="container">
+	<div id="bd">
+        <div id="main">
+        	<h1 class="title">
+            	<div class="logo large"></div>
+            </h1>
+            <div class="nav ue-clear">
+            	<ul class="searchList">
+                    <li class="searchItem current">活动</li>
+                    <li class="searchItem">百科</li>
+                    <li class="searchItem">社区</li>
+                    <li class="searchItem">产品</li>
+                    <li class="searchItem">课程</li>
+
+                </ul>
+            </div>
+            <div class="inputArea">
+            	<input type="text" class="searchInput" />
+                <input type="button" class="searchButton" onclick="search()" />
+                <a class="advanced" href="advanced.html">高级搜索</a>
+                <ul class="dataList">
+                	<li>移动心电网络</li>
+                    <li>胎儿监护仪</li>
+                    <li>心电大比武</li>
+                    <li>产品保修</li>
+                    <li>热门课程</li>
+                </ul>
+            </div>
+            
+            <div class="historyArea">
+            	<p class="history">
+                	<label>热门搜索：</label>
+                    <a href="javascript:;">热门词A</a>
+                    <a href="javascript:;">热门词B</a>
+                    <a href="javascript:;">热门词C</a>
+                    <a href="javascript:;">热门词D</a>
+                    <a href="javascript:;">热门词E</a>
+                </p>
+                <p class="history">
+                	<label>我的搜索：</label>
+                    <a href="javascript:;">博通收购高通</a>
+                    <a href="javascript:;">搜狗上市</a>
+                    <a href="javascript:;">ElasticSearch</a>
+                    <a href="javascript:;">双十一</a>
+                </p>
+            </div>
+        </div><!-- End of main -->
+    </div><!--End of bd-->
+    
+    <div class="foot">
+    	<div class="wrap">
+            <div class="copyright">Copyright &copy;yihexinda.com 版权所有  E-mail:crh@yihexinda.com</div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript">
+	$('.searchList').on('click', '.searchItem', function(){
+		$('.searchList .searchItem').removeClass('current');
+		$(this).addClass('current');	
+	});
+	
+	// 联想下拉显示隐藏
+	$('.searchInput').on('focus', function(){
+		$('.dataList').show()
+    });
+	
+	// 联想下拉点击
+	$('.dataList').on('click', 'li', function(){
+		var text = $(this).text();
+		$('.searchInput').val(text);
+		$('.dataList').hide()
+	});
+
+	function search() {
+        var searchContent=$('.searchInput').val();
+        console.log("search:"+searchContent);
+        if(searchContent!=null && searchContent!=""){
+            window.location.href="result.html"+"?searchContent="+searchContent;
+        }
+    }
+
+	hideElement($('.dataList'), $('.searchInput'));
+</script>
+</html>

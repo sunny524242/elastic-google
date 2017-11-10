@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>江苏移动信息检索系统</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/advanced.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="container">
+	<div id="hd" class="ue-clear">
+    	<div class="logo"></div>
+        <div class="inputArea">
+        	<input type="text" class="searchInput" />
+            <input type="button" class="searchButton" />
+            <a class="back" href="index.html">返回主页</a>
+        </div>
+    </div>
+    <div class="divsion"></div>
+	<div id="bd">
+        <div id="main">
+        	<div class="subfield">高级搜索</div>
+            <div class="subfieldContent">
+            	<!--搜索范围-->
+                <dl class="ue-clear advanceItem">
+                	<dd>
+                    	<label>搜索范围</label>
+                        <span>选择要搜索的范围</span>
+                    </dd>
+                    <dt class="fillInArea">
+                    	<span class="choose">
+                            <input name="scope" type="checkbox" checked="checked">
+                            <span class="text">标题</span>
+                        </span>
+                        <span class="choose">
+                        <input type="checkbox" name="scope">
+                            <span class="text">正文</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="scope">
+                            <span class="text">附件</span>
+                        </span>
+                    </dt>
+                </dl>
+                
+                <!--搜索关键字-->
+                <dl class="ue-clear advanceItem keyWords">
+                	<dd>
+                    	<label>搜索关键字</label>
+                        <div class="tips">
+                        	<p class="tip">包含以下<span class="impInfo">全部</span>的关键</p>
+                            <p class="tip">包含以下的<span class="impInfo">完整关键词</span></p>
+                            <p class="tip">包含以下<span class="impInfo">任意一个</span>关键词</p>
+                            <p class="tip"><span class="impInfo">不包括</span>以下关键词</p>
+                        </div>
+                    </dd>
+                    <dt class="fillInArea">
+                    	<p><input type="text" /></p>
+                        <p><input type="text" /></p>
+                        <p><input type="text" /></p>
+                        <p><input type="text" /></p>
+                    </dt>
+                </dl>
+                
+                <!--文件类型-->
+                <dl class="ue-clear advanceItem">
+                	<dd>
+                    	<label>文件类型</label>
+                        <span>指定的文件类型</span>
+                    </dd>
+                    <dt class="fillInArea">
+                    	<span class="choose">
+                            <input name="type" type="checkbox" checked="checked">
+                            <span class="text">资讯</span>
+                        </span>
+                        <span class="choose">
+                        <input type="checkbox" name="type">
+                            <span class="text">设计</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="type">
+                            <span class="text">界面设计</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="type">
+                            <span class="text">设计师</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="type">
+                            <span class="text">网页</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="type">
+                            <span class="text">图标库</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="type">
+                            <span class="text">人才库</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="type">
+                            <span class="text">自定义</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="type">
+                            <span class="text">其他</span>
+                        </span>
+                    </dt>
+                </dl>
+                
+                <!--搜索引擎-->
+                <dl class="ue-clear advanceItem part">
+                	<dd>
+                    	<label>搜索引擎</label>
+                        <span>选择要指定的搜索引擎</span>
+                    </dd>
+                    <dt class="fillInArea">
+                    	<span class="choose">
+                            <input name="scope" type="checkbox" checked="checked">
+                            <span class="text">百度搜索</span>
+                        </span>
+                        <span class="choose">
+                        <input type="checkbox" name="scope">
+                            <span class="text">Google</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="scope">
+                            <span class="text">360搜索</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="scope">
+                            <span class="text">搜狗</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="scope">
+                            <span class="text">即可搜索</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="scope">
+                            <span class="text">Yohoo!</span>
+                        </span>
+                        <span class="choose">
+                            <input type="checkbox" name="scope">
+                            <span class="text">搜搜</span>
+                        </span>
+                        <a class="more">
+                            <i class="moreIcon"></i>
+                            <span class="text">更多</span>
+                        </a>
+                    </dt>
+                </dl>
+                
+                <!--发布时间-->
+                <dl class="ue-clear advanceItem time">
+                	<dd>
+                    	<label>发布时间</label>
+                        <span>指定搜索的时间范围</span>
+                    </dd>
+                    <dt class="fillInArea">
+                    	<span class="choose">
+                            <input type="radio" name="time">
+                            <span class="text">全部</span>
+                        </span>
+                        <span class="choose">
+                            <input type="radio" name="time">
+                            <span class="text">近一天</span>
+                        </span>
+                        <span class="choose">
+                            <input type="radio" name="time">
+                            <span class="text">近一周</span>
+                        </span>
+                        <span class="choose">
+                            <input type="radio" name="time">
+                            <span class="text">近一月</span>
+                        </span>
+                        <span class="choose">
+                            <input type="radio" name="time">
+                            <span class="text">近一年</span>
+                        </span>
+                        <span class="choose defineRadio">
+                            <input type="radio" name="time">
+                            <span class="text">自定义</span>
+                        </span>
+                        <span class="define">
+                            <input type="text" />
+                            <span class="divsion">-</span>
+                            <input type="text" />
+                        </span>
+                    </dt>
+                </dl>
+                <div class="button">
+                	<input type="button" class="search" value="立刻搜索" onclick="javascript:window.location='result.html'" />
+                </div>
+            </div>
+        </div><!-- End of main -->
+    </div><!--End of bd-->
+    
+    
+</div>
+<div id="foot">Copyright &copy;uimaker.com 版权所有  E-mail:admin@uimaker.com</div>
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript">
+	$('.defineRadio input[type=radio]').click(function(e) {
+        if($(this).prop('checked')){
+			$('.define').show();
+		}
+    });
+	
+	$('.time input[type=radio]').click(function(){
+		if(!$(this).parent().hasClass('defineRadio')){
+			$('.define').hide();
+		}	
+	});
+	
+	$('.part input[type=checkbox]:gt(3)').parent().hide();
+	$('.part .more').toggle(function(e) {
+		$(this).addClass('show').find('.text').text('收起');
+        $('.part input[type=checkbox]:gt(3)').parent().show();
+    },function(){
+		$(this).removeClass('show').find('.text').text('更多');
+		$('.part input[type=checkbox]:gt(3)').parent().hide();	
+	});
+	
+	setHeight();
+	$(window).resize(function(){
+		setHeight();	
+	});
+	
+	function setHeight(){
+		if($('#container').outerHeight() < $(window).height()){
+			$('#container').height($(window).height()-33);
+		}	
+	}
+</script>
+</html>
