@@ -34,7 +34,8 @@ public class SearchController {
 
 
     /**
-     * 创建索引(其实一般不会再代码中创建索引，就像很少在代码中创建数据库一样)
+     * 创建索引
+     * 其实一般不会在代码中创建索引，就像很少会在代码中创建数据库一样
      * @return
      * @throws UnknownHostException
      */
@@ -53,7 +54,7 @@ public class SearchController {
 
 
     /**
-     * 搜索功能测试（有对应测试页面）
+     * 搜索功能测试（对应测试页面/index.html）
      * @param searchParam
      * @return
      * @throws IOException

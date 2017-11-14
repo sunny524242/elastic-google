@@ -36,12 +36,14 @@ import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 
 /**
- * Created by Administrator on 2017/11/12 0012.
+ * 搜索Service实现示例
  */
 @Service
 public class SearchServiceImpl implements SearchService{
 
+    //客户端
     private static TransportClient transportClient;
+    //客户端连接服务端
     static {
         try {
             InetSocketTransportAddress localhost = new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300);
@@ -52,25 +54,24 @@ public class SearchServiceImpl implements SearchService{
     }
 
     /**
-     * 搜索测试(5.6.4)
-     * @param searchParam
+     * 搜索测试(V5.6.4)
+     * @param searchParam 搜索参数（关键词+分页信息）
      * @return
      * @throws UnknownHostException
      */
     public JsonResult queryTest(SearchParam searchParam) {
-        // on startup
-
+        //匹配查询
         MatchQueryBuilder titleQuery = matchQuery("title", searchParam.getSearchContent());
         MatchQueryBuilder textQuery = matchQuery("text", searchParam.getSearchContent());
-
+        //或逻辑
         BoolQueryBuilder should = boolQuery().should(titleQuery).should(textQuery);
-
+        //文本高亮配置
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.field("title",100,1);
         highlightBuilder.field("text",500,1);
         highlightBuilder.preTags("<span style=\"color:red\">");
         highlightBuilder.postTags("</span>");
-
+        //配置其他搜索参数并执行查询
         SearchResponse searchResponse = transportClient.prepareSearch("test")
                 .setTypes("wiki_article")
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
@@ -80,10 +81,13 @@ public class SearchServiceImpl implements SearchService{
                 .execute()
                 .actionGet();
 
+        //整理搜索结果，方便前端进行展示
         HashMap<String, Object> rsMap = new HashMap<>();
+        //搜索结果数量
         SearchHits hits = searchResponse.getHits();
         rsMap.put("total",hits.totalHits());
         ArrayList<Object> hitsRs = new ArrayList<>();
+        //搜索用时
         rsMap.put("take",((double)searchResponse.getTookInMillis())/1000);
         rsMap.put("hits",hitsRs);
         for (SearchHit hit : hits) {
@@ -109,11 +113,9 @@ public class SearchServiceImpl implements SearchService{
                 }
                 hit.getSource().put(fieldKey, value);
             }
-
             hitsRs.add(singleHit);
         }
         //transportClient.close();
-        System.out.println(JSON.toJSONString(rsMap));
         return new JsonResult(200,"java测试成功", rsMap);
     }
 }

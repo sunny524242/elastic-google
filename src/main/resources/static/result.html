@@ -12,7 +12,7 @@
 	<div id="hd" class="ue-clear">
     	<div class="logo"></div>
         <div class="inputArea">
-        	<input type="text" class="searchInput" />
+        	<input type="text" class="searchInput" id="searchInput"/>
             <input type="button" class="searchButton" onclick="search()"/>
 
         </div>
@@ -222,6 +222,7 @@
 <script type="text/javascript" src="js/global.js"></script>
 <script type="text/javascript" src="js/pagination.js"></script>
 <script type="text/javascript" src="js/juicer-min.js"></script>
+<script type="text/javascript" src="js/opensug.js"  charset="gbk"></script>
 <script type="text/javascript">
 
 
@@ -295,7 +296,6 @@
         //console.log("current href:"+window.location.href);
         var searchContent=getQueryParam("searchContent");
         console.log("param:"+searchContent);
-        //searchContent="地理学";
         $(".searchInput").val(searchContent);
     }
 
@@ -333,7 +333,32 @@
         $(".totalPage").html(parseInt(data.total/10));
         $(".totalResult").html(data.total);
         //设置总页数(分页插件功能缺少文档)
+    }
 
+    //注册键盘事件-监听回车
+    document.onkeydown = function(e) {
+        //捕捉回车事件
+        var ev = (typeof event!= 'undefined') ? window.event : e;
+        if(ev.keyCode == 13) {
+            search();
+        }
+    }
+
+    //输入词建议
+    function initSuggest() {
+        var params = {
+            "XOffset": 0, //提示框位置横向偏移量,单位px
+            "YOffset": 0, //提示框位置纵向偏移量,单位px
+            "width": 380, //提示框宽度，单位px
+            "fontColor": "#666", //提示框文字颜色
+            "fontColorHI": "#222", //提示框高亮选择时文字颜色
+            "fontSize": "16px", //文字大小
+            "fontFamily": "微软雅黑", //文字字体
+            "borderColor": "#d8d8d8", //提示框的边框颜色
+            "bgcolorHI": "#e8e8e8", //提示框高亮选择的颜色
+            "sugSubmit": false, //在选择提示词条是是否提交表单
+        };
+        BaiduSuggestion.bind("searchInput", params, function () {console.log("回调无效")});
     }
 
 
@@ -341,6 +366,7 @@
         setSearchContent();
         initPagination();
         search();
+        initSuggest();
     }
 
     init();

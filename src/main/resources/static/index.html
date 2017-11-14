@@ -24,16 +24,16 @@
                 </ul>
             </div>
             <div class="inputArea">
-            	<input type="text" class="searchInput" />
+            	<input type="text" class="searchInput" id="searchInput"/>
                 <input type="button" class="searchButton" onclick="search()" />
                <!-- <a class="advanced" href="advanced.html">高级搜索</a>-->
-                <ul class="dataList">
-                	<li>移动心电网络</li>
-                    <li>胎儿监护仪</li>
-                    <li>心电大比武</li>
-                    <li>产品保修</li>
-                    <li>热门课程</li>
-                </ul>
+                <!--<ul class="dataList">-->
+                	<!--<li>移动心电网络</li>-->
+                    <!--<li>胎儿监护仪</li>-->
+                    <!--<li>心电大比武</li>-->
+                    <!--<li>产品保修</li>-->
+                    <!--<li>热门课程</li>-->
+                <!--</ul>-->
             </div>
             
             <div class="historyArea">
@@ -65,25 +65,55 @@
 </body>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/opensug.js"  charset="gbk"></script>
 <script type="text/javascript">
-	$('.searchList').on('click', '.searchItem', function(){
-		$('.searchList .searchItem').removeClass('current');
-		$(this).addClass('current');	
-	});
-	
-	// 联想下拉显示隐藏
-	$('.searchInput').on('focus', function(){
-		$('.dataList').show()
-    });
-	
-	// 联想下拉点击
-	$('.dataList').on('click', 'li', function(){
-		var text = $(this).text();
-		$('.searchInput').val(text);
-		$('.dataList').hide()
-	});
+//	$('.searchList').on('click', '.searchItem', function(){
+//		$('.searchList .searchItem').removeClass('current');
+//		$(this).addClass('current');
+//	});
+//
+//	// 联想下拉显示隐藏
+//	$('.searchInput').on('focus', function(){
+//		$('.dataList').show()
+//    });
+//
+//	// 联想下拉点击
+//	$('.dataList').on('click', 'li', function(){
+//		var text = $(this).text();
+//		$('.searchInput').val(text);
+//		$('.dataList').hide()
+//	});
+//
+//    hideElement($('.dataList'), $('.searchInput'));
 
-	function search() {
+    //输入词建议
+    document.getElementById("searchInput").focus();
+    var params = {
+        "XOffset": 0, //提示框位置横向偏移量,单位px
+        "YOffset": 0, //提示框位置纵向偏移量,单位px
+        "width": 300, //提示框宽度，单位px
+        "fontColor": "#666", //提示框文字颜色
+        "fontColorHI": "#222", //提示框高亮选择时文字颜色
+        "fontSize": "16px", //文字大小
+        "fontFamily": "微软雅黑", //文字字体
+        "borderColor": "#d8d8d8", //提示框的边框颜色
+        "bgcolorHI": "#e8e8e8", //提示框高亮选择的颜色
+        "sugSubmit": false, //在选择提示词条是是否提交表单
+    };
+    BaiduSuggestion.bind("searchInput", params, function () {console.log("回调无效")});
+
+
+    //注册键盘事件-监听回车
+    document.onkeydown = function(e) {
+        //捕捉回车事件
+        var ev = (typeof event!= 'undefined') ? window.event : e;
+        if(ev.keyCode == 13) {
+            search();
+        }
+    }
+
+    //执行搜索
+    function search() {
         var searchContent=$('.searchInput').val();
         console.log("search:"+searchContent);
         if(searchContent!=null && searchContent!=""){
@@ -91,6 +121,6 @@
         }
     }
 
-	hideElement($('.dataList'), $('.searchInput'));
+
 </script>
 </html>
