@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.transport.TransportClient;
 
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
@@ -22,6 +23,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.suggest.Suggest;
 
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
 import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
@@ -45,9 +47,35 @@ public class SearchServiceImpl implements SearchService{
     private static TransportClient transportClient;
     //客户端连接服务端
     static {
+        getClientWithXpack();
+    }
+
+
+    //当服务端未安装X-PACK插件时连接方式
+    private static void getClientWithoutXpack(){
         try {
-            InetSocketTransportAddress localhost = new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300);
+            InetSocketTransportAddress localhost = new InetSocketTransportAddress(InetAddress.getByName("192.168.1.109"), 9300);
+//            Settings settings = Settings.builder()
+//                    .put("client.transport.sniff", true)
+//                    .put("cluster.name","ES-CLUSTER1").build();
             transportClient = new PreBuiltTransportClient(EMPTY).addTransportAddress(localhost);
+            System.out.println("客户端创建成功");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //当服务端安装了X-PACK插件时连接方式
+    private static void getClientWithXpack(){
+        try {
+            InetSocketTransportAddress localhost = new InetSocketTransportAddress(InetAddress.getByName("192.168.1.109"), 9300);
+            Settings settings = Settings.builder()
+                    .put("client.transport.sniff", true)
+                    .put("cluster.name","ES-CLUSTER1")
+                    .put("xpack.security.user", "elastic:changeme")
+                    .build();
+            transportClient = new PreBuiltXPackTransportClient(settings).addTransportAddress(localhost);
+            System.out.println("客户端创建成功");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
