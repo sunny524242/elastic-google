@@ -3,6 +3,7 @@ package com.example.es.Service;
 import com.example.es.common.vo.JsonResult;
 import com.example.es.common.vo.SearchParam;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 /**
@@ -16,5 +17,5 @@ public interface SearchService {
      * @return
      * @throws UnknownHostException
      */
-    JsonResult queryTest(SearchParam searchParam) throws UnknownHostException;
+    JsonResult queryTest(SearchParam searchParam) throws IOException;
 }

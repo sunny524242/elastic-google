@@ -1,40 +1,37 @@
 package com.example.es.Service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.example.es.Service.SearchService;
 import com.example.es.common.vo.JsonResult;
 import com.example.es.common.vo.SearchParam;
-
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.message.BasicHeader;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.transport.TransportClient;
-
-import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-
-
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
-import org.elasticsearch.search.suggest.Suggest;
-
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.elasticsearch.xpack.client.PreBuiltXPackTransportClient;
 import org.springframework.stereotype.Service;
 
-import java.net.InetAddress;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import static org.elasticsearch.common.settings.Settings.*;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 
 
 /**
@@ -44,53 +41,56 @@ import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 public class SearchServiceImpl implements SearchService{
 
     //客户端
-    private static TransportClient transportClient;
+    private static RestHighLevelClient client;
     //客户端连接服务端
     static {
-        getClientWithXpack();
+        try {
+            getClientWithXpack();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
     //当服务端未安装X-PACK插件时连接方式
-    private static void getClientWithoutXpack(){
-        try {
-            InetSocketTransportAddress localhost = new InetSocketTransportAddress(InetAddress.getByName("192.168.1.109"), 9300);
-//            Settings settings = Settings.builder()
-//                    .put("client.transport.sniff", true)
-//                    .put("cluster.name","ES-CLUSTER1").build();
-            transportClient = new PreBuiltTransportClient(EMPTY).addTransportAddress(localhost);
-            System.out.println("客户端创建成功");
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+    private static void getClientWithXpack() throws UnsupportedEncodingException {
+        RestClientBuilder builder = RestClient.builder(new HttpHost("192.168.1.117", 9200, "http"));
+        String auth="Basic "+Base64.getEncoder().encode("elastic:changeme".getBytes("UTF-8")).toString();
+        Header[] defaultHeaders = new Header[]{new BasicHeader("Authorization", auth)};
+        builder.setDefaultHeaders(defaultHeaders);
+        RestClient lowLevelRestClient = builder.build();
+
+        client =new RestHighLevelClient(lowLevelRestClient);
+
     }
 
     //当服务端安装了X-PACK插件时连接方式
-    private static void getClientWithXpack(){
-        try {
-            InetSocketTransportAddress localhost = new InetSocketTransportAddress(InetAddress.getByName("192.168.1.109"), 9300);
-            Settings settings = Settings.builder()
-                    .put("client.transport.sniff", true)
-                    .put("cluster.name","ES-CLUSTER1")
-                    .put("xpack.security.user", "elastic:changeme")
-                    .build();
-            transportClient = new PreBuiltXPackTransportClient(settings).addTransportAddress(localhost);
-            System.out.println("客户端创建成功");
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+    private static void getClientWithoutXpack(){
+        RestClientBuilder builder = RestClient.builder(new HttpHost("localhost", 9200, "http"));
+        RestClient lowLevelRestClient = builder.build();
+        client = new RestHighLevelClient(lowLevelRestClient);
+
     }
 
-    /**
+
+
+
+
+     /**
      * 搜索测试(V5.6.4)
      * @param searchParam 搜索参数（关键词+分页信息）
      * @return
      * @throws UnknownHostException
      */
-    public JsonResult queryTest(SearchParam searchParam) {
+    public JsonResult queryTest(SearchParam searchParam) throws IOException {
+
+        SearchRequest searchRequest = new SearchRequest("test");
+        searchRequest.types("wiki_article");
+
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         //匹配查询
-        MatchQueryBuilder titleQuery = matchQuery("title", searchParam.getSearchContent());
-        MatchQueryBuilder textQuery = matchQuery("text", searchParam.getSearchContent());
+        MatchQueryBuilder titleQuery = new MatchQueryBuilder("title", searchParam.getSearchContent());
+        MatchQueryBuilder textQuery = new MatchQueryBuilder("text", searchParam.getSearchContent());
         //或逻辑
         BoolQueryBuilder should = boolQuery().should(titleQuery).should(textQuery);
         //文本高亮配置
@@ -99,15 +99,17 @@ public class SearchServiceImpl implements SearchService{
         highlightBuilder.field("text",500,1);
         highlightBuilder.preTags("<span style=\"color:red\">");
         highlightBuilder.postTags("</span>");
-        //配置其他搜索参数并执行查询
-        SearchResponse searchResponse = transportClient.prepareSearch("test")
-                .setTypes("wiki_article")
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(should)
+
+
+        searchSourceBuilder.query(should)
                 .highlighter(highlightBuilder)
-                .setFrom(searchParam.getPage()*searchParam.getPageSize()).setSize(searchParam.getPageSize())
-                .execute()
-                .actionGet();
+                .from(searchParam.getPage()*searchParam.getPageSize())
+                .size(searchParam.getPageSize())
+                .timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+        SearchRequest source = searchRequest.source(searchSourceBuilder);
+
+        SearchResponse searchResponse = client.search(searchRequest);
 
         //整理搜索结果，方便前端进行展示
         HashMap<String, Object> rsMap = new HashMap<>();

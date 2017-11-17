@@ -52,9 +52,14 @@
 			<artifactId>transport</artifactId>
 			<version>5.6.4</version>
 		</dependency>-->
-		<dependency>
+<!--		<dependency>
 			<groupId>org.elasticsearch.client</groupId>
 			<artifactId>x-pack-transport</artifactId>
+			<version>5.6.4</version>
+		</dependency>-->
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-high-level-client</artifactId>
 			<version>5.6.4</version>
 		</dependency>
 		<dependency>
